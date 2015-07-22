@@ -1,2 +1,7 @@
-# learning-go
-The path I took to learn the Go programming language
+# Learning go
+
+This repo tracks the resources I've been reading to ramp up on Go. It also provides the programs I wrote in Go, as a way to experiment the feature of this language. Hopefully it will help you too!
+
+Resources:
+  - [Working with Go](https://github.com/mkaz/working-with-go) repo
+  - [DevFreeBooks](http://devfreebooks.org/): [The little book of Go](http://openmymind.net/The-Little-Go-Book/?utm_source=devfreebooks&utm_medium=medium&utm_campaign=DevFreeBooks)
