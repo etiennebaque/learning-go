@@ -11,6 +11,9 @@ import (
 	_ "github.com/lib/pq"
 )
 
+
+// Shows the content of all ads
+// GET /ads
 func AdIndex(w http.ResponseWriter, r *http.Request) {
 	db, err := sql.Open("postgres", "user=etienne dbname=madloba password=postgres sslmode=disable")
 	if err != nil {
@@ -30,32 +33,42 @@ func AdIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-    w.WriteHeader(http.StatusOK)
-    if err := json.NewEncoder(w).Encode(ads); err != nil {
-        panic(err)
-    }
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(ads); err != nil {
+		panic(err)
+	}
+}
+
+// Shows the content of one ad
+// GET /ad/{adId}
+func AdShow(w http.ResponseWriter, r *http.Request) {
+	db, err := sql.Open("postgres", "user=etienne dbname=madloba password=postgres sslmode=disable")
+	if err != nil {
+		panic(err)
+	}
+
+	vars := mux.Vars(r)
+	adId := vars["adId"]
+	fmt.Println("Getting ad with ID", adId)
+
+	rows, err := db.Query("select id, title, description from ads where id=$1;", adId)
+	var id int
+	var title, description string
+
+	for rows.Next() {		
+		err = rows.Scan(&id, &title, &description)
+	}
+
+	ad := Ad{Id: id, Title: title, Description: description}
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(ad); err != nil {
+		panic(err)
+	}
+
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Welcome!")
-}
-
-func TodoIndex(w http.ResponseWriter, r *http.Request) {
-	todos := Todos{
-		Todo{Name: "Write presentation"},
-		Todo{Name: "Host meetup"},
-	}
-
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-    w.WriteHeader(http.StatusOK)
-
-	if err := json.NewEncoder(w).Encode(todos); err != nil {
-        panic(err)
-    }
-}
-
-func TodoShow(w http.ResponseWriter, r *http.Request) {
-    vars := mux.Vars(r)
-    todoId := vars["todoId"]
-    fmt.Fprintln(w, "Todo show:", todoId)
+	fmt.Fprintln(w, "Welcome to Madloba API!")
 }
